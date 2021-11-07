@@ -1,12 +1,12 @@
-;;; dilbert.el --- View Dilbert comics.  -*- lexical-binding: t; -*-
+;;; dilbert.el --- View Dilbert comics  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021 Daniils Petrovs
 
 ;; Author: Daniils Petrovs <thedanpetrov@gmail.com>
 ;; URL: https://github.com/DaniruKun/dilbert-el
-;; Version: 0.1-pre
-;; Package-Requires: ((emacs "25.2")) envline dash
-;; Keywords: dilbert
+;; Version: 0.1
+;; Package-Requires: ((emacs "26.1") (enlive "0.0.1") (dash "2.19.1"))
+;; Keywords: multimedia news
 
 ;; This file is not part of GNU Emacs.
 
@@ -25,7 +25,7 @@
 
 ;;; Commentary:
 
-;; This package allows flanges to be easily frobnicated.
+;; Read Dilbert comics from the comfort of Emacs.
 
 ;;;; Installation
 
@@ -37,32 +37,30 @@
 
 ;; Install these required packages:
 
-;; + foo
-;; + bar
+;; + enlive
+;; + dash
 
 ;; Then put this file in your load-path, and put this in your init
 ;; file:
 
-;; (require 'package-name)
+;; (require 'dilbert)
 
 ;;;; Usage
 
 ;; Run one of these commands:
 
-;; `package-name-command': Frobnicate the flange.
+;; `dilbert': Get the latest Dilbert comic strip.
 
 ;;;; Tips
 
-;; + You can customize settings in the `package-name' group.
+;; + You can customize settings in the `dilbert' group.
 
 ;;;; Credits
 
 ;; This package would not have been possible without the following
-;; packages: foo[1], which showed me how to bifurcate, and bar[2],
-;; which takes care of flanges.
+;; packages: xkcd[1].
 ;;
-;;  [1] https://example.com/foo.el
-;;  [2] https://example.com/bar.el
+;;  [1] https://github.com/vibhavp/emacs-xkcd
 
 ;;; Code:
 
@@ -102,28 +100,26 @@ Should preferably be located in `dilbert-cache-dir'."
 
 ;;;;; Keymaps
 
-;; This technique makes it easier and less verbose to define keymaps
-;; that have many bindings.
-
 (defvar dilbert-map
   ;; This makes it easy and much less verbose to define keys
   (let ((map (make-sparse-keymap "dilbert map"))
         (maps (list
                ;; Mappings go here, e.g.:
                "q" #'dilbert-kill-buffer
-               [remap search-forward] #'dilbert-search-forward
-               )))
+               [remap search-forward] #'dilbert-search-forward)))
     (cl-loop for (key fn) on maps by #'cddr
              do (progn
                   (when (stringp key)
                     (setq key (kbd key)))
                   (define-key map key fn)))
     map))
+
 ;;;; Commands
 
 ;;;###autoload
 (defun dilbert-view-latest ()
   "View the latest Dilbert comic strip."
+  (interactive)
   (get-buffer-create "*dilbert*")
   (switch-to-buffer "*dilbert*")
   (dilbert-prep-buffer)
@@ -137,6 +133,9 @@ Should preferably be located in `dilbert-cache-dir'."
 	  (dilbert-insert-image file)
 	  (message "%s" url))))
 
+;;;###autoload
+(defalias 'dilbert 'dilbert-view-latest)
+
 ;;;; Functions
 
 ;;;; Private
@@ -149,7 +148,7 @@ Should preferably be located in `dilbert-cache-dir'."
   "Get the latest Dilbert comic image URL."
   (->>
    (enlive-query-all (dilbert-fetch-homepage) [img.img-comic])
-   (first)
+   (first) ;; The latest comic strip will be the first from results.
    (second)
    (assoc 'src)
    (cdr)))
