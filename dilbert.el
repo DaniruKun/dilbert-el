@@ -3,10 +3,10 @@
 ;; Copyright (C) 2021 Daniils Petrovs
 
 ;; Author: Daniils Petrovs <thedanpetrov@gmail.com>
-;; URL: https://example.com/package-name.el
+;; URL: https://github.com/DaniruKun/dilbert-el
 ;; Version: 0.1-pre
 ;; Package-Requires: ((emacs "25.2")) envline dash
-;; Keywords: something
+;; Keywords: dilbert
 
 ;; This file is not part of GNU Emacs.
 
@@ -83,7 +83,7 @@
 (defgroup dilbert nil
   "Settings for `dilbert'."
   :group 'multimedia
-  :link '(url-link "https://example.com/package-name.el"))
+  :link '(url-link "https://github.com/DaniruKun/dilbert-el"))
 
 (defcustom dilbert-cache-dir (let ((dir (concat user-emacs-directory "dilbert/")))
 							   (make-directory dir :parents)
@@ -126,7 +126,7 @@ Should preferably be located in `dilbert-cache-dir'."
   "View the latest Dilbert comic strip."
   (get-buffer-create "*dilbert*")
   (switch-to-buffer "*dilbert*")
-  (dilbert-mode)
+  (dilbert-prep-buffer)
   (let (buffer-read-only)
 	(erase-buffer)
 	(let* ((url (dilbert-get-latest-comic-url))
@@ -177,6 +177,17 @@ If the image is a gif, animate it."
               (image-animated-p image)))
 	(image-animate image 0 t))
     (add-text-properties start (point) '(help-echo "Alt"))))
+
+(defun dilbert-kill-buffer ()
+  "Kill the dilbert buffer."
+  (interactive)
+  (kill-buffer "*dilbert*"))
+
+(defun dilbert-prep-buffer ()
+  "Prepare the dilbert buffer for presentation by toggling modes."
+  (dilbert-mode)
+  (display-line-numbers-mode 0)
+  (visual-fill-column-mode 0))
 
 ;;;; Footer
 
