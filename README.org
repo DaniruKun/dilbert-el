@@ -10,7 +10,7 @@ Read [[https://dilbert.com][Dilbert]] comics directly in Emacs.
 
 * Screenshots
 
-[[screenshot.png][Demo Screenshot]]
+[[./screenshot.png]]
 
 * Contents                                                         :noexport:
 :PROPERTIES:
