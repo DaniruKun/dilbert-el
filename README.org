@@ -6,13 +6,11 @@
 
 [[https://melpa.org/#/package-name][file:https://melpa.org/packages/package-name-badge.svg]] [[https://stable.melpa.org/#/package-name][file:https://stable.melpa.org/packages/package-name-badge.svg]]
 
-This is my package.  It is nice.  You should try it.
+Read [[https://dilbert.com][Dilbert]] comics directly in Emacs.
 
 * Screenshots
 
-This screenshot shows how to frobnicate the fripulator:
-
-[[screenshot1.png]]
+[[screenshot.png][Demo Screenshot]]
 
 * Contents                                                         :noexport:
 :PROPERTIES:
@@ -40,13 +38,13 @@ If you installed from MELPA, you're done.  Just run one of the commands below.
 
   Install these required packages:
 
-  + =foo=
-  + =bar=
+  + =enlive=
+  + =dash=
 
   Then put this file in your load-path, and put this in your init file:
 
   #+BEGIN_SRC elisp
-(require 'package-name)
+(require 'dilbert)
   #+END_SRC
 
 * Usage
@@ -56,41 +54,21 @@ If you installed from MELPA, you're done.  Just run one of the commands below.
 
   Run one of these commands:
 
-  + =package-name-command=: Frobnicate the flange.
+  + =dilbert=: View the latest Dilbert comic strip.
 
 ** Tips
 
-+ You can customize settings in the =package-name= group.
++ You can customize settings in the =dilbert= group.
 
 * Changelog
 :PROPERTIES:
 :TOC:      :depth 0
 :END:
 
-** 1.1.0
+** 0.1
 
 *Additions*
-+  Add command =package-name-debarnacle= to de-barnacle the hull.
-
-*Changes*
-+ Command =package-name-anchor= now takes an argument, =weigh= or =let-go=.
-
-*Internal*
-+  Rewrote input parsing.
-+  Factored out anchor-weighing.
-
-** 1.0.1
-
-*Fixes*
-+  Ensure anchor is secure before returning from =package-name-anchor=.
-
-** 1.0.0
-
-Initial release.
-
-* Credits
-
-  This package would not have been possible without the following packages: [[https://example.com/foo.el][foo]] which showed me how to bifurcate, and [[https://example.com/bar.el][bar]], which takes care of flanges.
++ Initial release.
 
 * Development
 
