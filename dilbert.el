@@ -5,7 +5,7 @@
 ;; Author: Daniils Petrovs <thedanpetrov@gmail.com>
 ;; URL: https://example.com/package-name.el
 ;; Version: 0.1-pre
-;; Package-Requires: ((emacs "25.2"))
+;; Package-Requires: ((emacs "25.2")) envline dash
 ;; Keywords: something
 
 ;; This file is not part of GNU Emacs.
@@ -92,10 +92,13 @@
   :group 'dilbert
   :type 'directory)
 
-;;;; Variables
+(defcustom dilbert-cache-latest (concat dilbert-cache-dir "latest")
+  "File to store the latest cached dilbert number in.
+Should preferably be located in `dilbert-cache-dir'."
+  :group 'dilbert
+  :type 'file)
 
-(defvar dilbert-var nil
-  "A variable.")
+;;;; Variables
 
 ;;;;; Keymaps
 
@@ -107,7 +110,7 @@
   (let ((map (make-sparse-keymap "dilbert map"))
         (maps (list
                ;; Mappings go here, e.g.:
-               "RET" #'dilbert-RET-command
+               "q" #'dilbert-kill-buffer
                [remap search-forward] #'dilbert-search-forward
                )))
     (cl-loop for (key fn) on maps by #'cddr
@@ -119,8 +122,20 @@
 ;;;; Commands
 
 ;;;###autoload
-(defun dilbert-get-latest ()
-)
+(defun dilbert-view-latest ()
+  "View the latest Dilbert comic strip."
+  (get-buffer-create "*dilbert*")
+  (switch-to-buffer "*dilbert*")
+  (dilbert-mode)
+  (let (buffer-read-only)
+	(erase-buffer)
+	(let* ((url (dilbert-get-latest-comic-url))
+		   (file (dilbert-download url)))
+	  (message "Getting comic...")
+	  (center-line)
+	  (insert "\n")
+	  (dilbert-insert-image file)
+	  (message "%s" url))))
 
 ;;;; Functions
 
@@ -140,13 +155,28 @@
    (cdr)))
 
 (defun dilbert-download (img-url)
-  "Download the comic strip image at IMG-URL. If exists, just return img path."
+  "Download the comic strip image at IMG-URL.
+If exists, just return the full img path."
   (let* ((img-hash (-> img-url (split-string "/") (last) (first)))
-		(file-name (format "%s%s" dilbert-cache-dir img-hash)))
+		(file-name (format "%s%s.gif" dilbert-cache-dir img-hash)))
 	(if (file-exists-p file-name)
 		file-name
 	  (url-copy-file img-url file-name))
 	file-name))
+
+(defun dilbert-insert-image (file)
+  "Insert image described by FILE in buffer with the title-text.
+If the image is a gif, animate it."
+  (let ((image (create-image file 'gif))
+	(start (point)))
+    (insert-image image)
+    (if (or
+         (and (fboundp 'image-multi-frame-p)
+              (image-multi-frame-p image))
+         (and (fboundp 'image-animated-p)
+              (image-animated-p image)))
+	(image-animate image 0 t))
+    (add-text-properties start (point) '(help-echo "Alt"))))
 
 ;;;; Footer
 
