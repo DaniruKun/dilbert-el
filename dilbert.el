@@ -107,8 +107,7 @@ Should preferably be located in `dilbert-cache-dir'."
   (let ((map (make-sparse-keymap "dilbert map"))
         (maps (list
                ;; Mappings go here, e.g.:
-               "q" #'dilbert-kill-buffer
-               [remap search-forward] #'dilbert-search-forward)))
+               "q" #'dilbert-kill-buffer)))
     (cl-loop for (key fn) on maps by #'cddr
              do (progn
                   (when (stringp key)
@@ -136,7 +135,7 @@ Should preferably be located in `dilbert-cache-dir'."
 	  (message "%s" url))))
 
 ;;;###autoload
-(defalias 'dilbert 'dilbert-view-latest)
+(defalias #'dilbert #'dilbert-view-latest)
 
 ;;;; Functions
 
@@ -187,8 +186,7 @@ If the image is a gif, animate it."
 (defun dilbert-prep-buffer ()
   "Prepare the dilbert buffer for presentation by toggling modes."
   (dilbert-mode)
-  (display-line-numbers-mode 0)
-  (visual-fill-column-mode 0))
+  (display-line-numbers-mode 0))
 
 ;;;; Footer
 
