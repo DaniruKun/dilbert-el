@@ -98,6 +98,8 @@ Should preferably be located in `dilbert-cache-dir'."
 
 ;;;; Variables
 
+(defconst dilbert-home-url "https://dilbert.com")
+
 ;;;;; Keymaps
 
 (defvar dilbert-map
