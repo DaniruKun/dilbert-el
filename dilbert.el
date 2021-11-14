@@ -135,7 +135,7 @@ Should preferably be located in `dilbert-cache-dir'."
 	  (message "%s" url))))
 
 ;;;###autoload
-(defalias #'dilbert #'dilbert-view-latest)
+(defalias 'dilbert #'dilbert-view-latest)
 
 ;;;; Functions
 
