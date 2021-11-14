@@ -4,7 +4,7 @@
 
 # Note: This readme works with the org-make-toc <https://github.com/alphapapa/org-make-toc> package, which automatically updates the table of contents.
 
-[[https://melpa.org/#/package-name][file:https://melpa.org/packages/package-name-badge.svg]] [[https://stable.melpa.org/#/package-name][file:https://stable.melpa.org/packages/package-name-badge.svg]]
+[[https://melpa.org/#/dilbert][file:https://melpa.org/packages/dilbert-badge.svg]]
 
 Read [[https://dilbert.com][Dilbert]] comics directly in Emacs.
 
@@ -33,6 +33,17 @@ Read [[https://dilbert.com][Dilbert]] comics directly in Emacs.
 ** MELPA
 
 If you installed from MELPA, you're done.  Just run one of the commands below.
+
+#+begin_example
+M-x package-install dilbert
+#+end_example
+
+*** use-package
+If you use `use-package`, simply add this to your initfile:
+
+#+begin_src emacs-lisp
+(use-package dilbert)
+#+end_src
 
 ** Manual
 
