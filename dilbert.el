@@ -84,8 +84,8 @@
   :link '(url-link "https://github.com/DaniruKun/dilbert-el"))
 
 (defcustom dilbert-cache-dir (let ((dir (concat user-emacs-directory "dilbert/")))
-							   (make-directory dir :parents)
-							   dir)
+                               (make-directory dir :parents)
+                               dir)
   "Directory for caching comics and other files."
   :group 'dilbert
   :type 'directory)
@@ -133,16 +133,16 @@ be used for presentation."
   (switch-to-buffer "*dilbert*")
   (dilbert-prep-buffer)
   (let (buffer-read-only)
-	(erase-buffer)
-	(let* ((comic (dilbert-latest-comic))
-		   (url (dilbert-comic-url comic))
-		   (title (dilbert-comic-title comic))
-		   (file (dilbert-download url)))
-	  (message "Getting comic...")
-	  (center-line)
-	  (insert "\n")
-	  (dilbert-insert-image file)
-	  (message "%s" title))))
+    (erase-buffer)
+    (let* ((comic (dilbert-latest-comic))
+           (url (dilbert-comic-url comic))
+           (title (dilbert-comic-title comic))
+           (file (dilbert-download url)))
+      (message "Getting comic...")
+      (center-line)
+      (insert "\n")
+      (dilbert-insert-image file)
+      (message "%s" title))))
 
 ;;;###autoload
 (defalias 'dilbert #'dilbert-view-latest)
@@ -163,24 +163,24 @@ be used for presentation."
   "Download the comic strip image at IMG-URL.
 If exists, just return the full img path."
   (let* ((img-hash (-> img-url (split-string "/") (last) (first)))
-		(file-name (format "%s%s.gif" dilbert-cache-dir img-hash)))
-	(if (file-exists-p file-name)
-		file-name
-	  (url-copy-file img-url file-name))
-	file-name))
+        (file-name (format "%s%s.gif" dilbert-cache-dir img-hash)))
+    (if (file-exists-p file-name)
+        file-name
+      (url-copy-file img-url file-name))
+    file-name))
 
 (defun dilbert-insert-image (file)
   "Insert image described by FILE in buffer with the title-text.
 If the image is a gif, animate it."
   (let ((image (create-image file 'gif))
-	(start (point)))
+    (start (point)))
     (insert-image image)
     (if (or
          (and (fboundp 'image-multi-frame-p)
               (image-multi-frame-p image))
          (and (fboundp 'image-animated-p)
               (image-animated-p image)))
-	(image-animate image 0 t))
+    (image-animate image 0 t))
     (add-text-properties start (point) '(help-echo "Alt"))))
 
 (defun dilbert-kill-buffer ()
@@ -196,15 +196,15 @@ If the image is a gif, animate it."
 (defun dilbert-latest-comics ()
   "Fetches and returns the latest comic strips on the homepage."
   (let* ((homepage (dilbert-fetch-homepage))
-		 (img-selector [img.img-comic])
-		 (img->comic (lambda (img)
-					   (let ((attrs (second img)))
-						 (make-dilbert-comic
-						  :title (->> attrs (assoc 'alt) (cdr))
-						  :url (->> attrs (assoc 'src) (cdr)))))))
-	(->> img-selector
-	 (enlive-query-all homepage)
-	 (-map img->comic))))
+         (img-selector [img.img-comic])
+         (img->comic (lambda (img)
+                       (let ((attrs (second img)))
+                         (make-dilbert-comic
+                          :title (->> attrs (assoc 'alt) (cdr))
+                          :url (->> attrs (assoc 'src) (cdr)))))))
+    (->> img-selector
+     (enlive-query-all homepage)
+     (-map img->comic))))
 
 ;;;; Footer
 
