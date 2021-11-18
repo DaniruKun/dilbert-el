@@ -4,7 +4,7 @@
 
 ;; Author: Daniils Petrovs <thedanpetrov@gmail.com>
 ;; URL: https://github.com/DaniruKun/dilbert-el
-;; Version: 0.1
+;; Version: 0.2
 ;; Package-Requires: ((emacs "26.1") (enlive "0.0.1") (dash "2.19.1"))
 ;; Keywords: multimedia news
 
@@ -100,6 +100,14 @@ Should preferably be located in `dilbert-cache-dir'."
 
 (defconst dilbert-home-url "https://dilbert.com")
 
+
+;;;; Structs
+
+(defstruct dilbert-comic
+  "Defines a single Dilbert comic strip entity to
+be used for presentation."
+  title url)
+
 ;;;;; Keymaps
 
 (defvar dilbert-map
@@ -126,13 +134,15 @@ Should preferably be located in `dilbert-cache-dir'."
   (dilbert-prep-buffer)
   (let (buffer-read-only)
 	(erase-buffer)
-	(let* ((url (dilbert-get-latest-comic-url))
+	(let* ((comic (dilbert-latest-comic))
+		   (url (dilbert-comic-url comic))
+		   (title (dilbert-comic-title comic))
 		   (file (dilbert-download url)))
 	  (message "Getting comic...")
 	  (center-line)
 	  (insert "\n")
 	  (dilbert-insert-image file)
-	  (message "%s" url))))
+	  (message "%s" title))))
 
 ;;;###autoload
 (defalias 'dilbert #'dilbert-view-latest)
@@ -145,14 +155,9 @@ Should preferably be located in `dilbert-cache-dir'."
   "Fetch the Dilbert homepage containing the latest comic strip."
   (enlive-fetch dilbert-home-url))
 
-(defun dilbert-get-latest-comic-url ()
-  "Get the latest Dilbert comic image URL."
-  (->>
-   (enlive-query-all (dilbert-fetch-homepage) [img.img-comic])
-   (first) ;; The latest comic strip will be the first from results.
-   (second)
-   (assoc 'src)
-   (cdr)))
+(defun dilbert-latest-comic ()
+  "Returns the latest Dilbert comic."
+  (->> (dilbert-latest-comics) (first)))
 
 (defun dilbert-download (img-url)
   "Download the comic strip image at IMG-URL.
@@ -187,6 +192,19 @@ If the image is a gif, animate it."
   "Prepare the dilbert buffer for presentation by toggling modes."
   (dilbert-mode)
   (display-line-numbers-mode 0))
+
+(defun dilbert-latest-comics ()
+  "Fetches and returns the latest comic strips on the homepage."
+  (let* ((homepage (dilbert-fetch-homepage))
+		 (img-selector [img.img-comic])
+		 (img->comic (lambda (img)
+					   (let ((attrs (second img)))
+						 (make-dilbert-comic
+						  :title (->> attrs (assoc 'alt) (cdr))
+						  :url (->> attrs (assoc 'src) (cdr)))))))
+	(->> img-selector
+	 (enlive-query-all homepage)
+	 (-map img->comic))))
 
 ;;;; Footer
 

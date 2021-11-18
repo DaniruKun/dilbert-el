@@ -9,7 +9,6 @@
 Read [[https://dilbert.com][Dilbert]] comics directly in Emacs.
 
 * Screenshots
-
 [[./screenshot.png]]
 
 * Contents                                                         :noexport:
@@ -19,7 +18,6 @@ Read [[https://dilbert.com][Dilbert]] comics directly in Emacs.
 :CONTENTS:
   -  [[#installation][Installation]]
   -  [[#usage][Usage]]
-  -  [[#changelog][Changelog]]
   -  [[#credits][Credits]]
   -  [[#development][Development]]
   -  [[#license][License]]
@@ -70,16 +68,6 @@ If you use `use-package`, simply add this to your initfile:
 ** Tips
 
 + You can customize settings in the =dilbert= group.
-
-* Changelog
-:PROPERTIES:
-:TOC:      :depth 0
-:END:
-
-** 0.1
-
-*Additions*
-+ Initial release.
 
 * Development
 
