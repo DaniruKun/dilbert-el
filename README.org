@@ -5,6 +5,7 @@
 # Note: This readme works with the org-make-toc <https://github.com/alphapapa/org-make-toc> package, which automatically updates the table of contents.
 
 [[https://melpa.org/#/dilbert][file:https://melpa.org/packages/dilbert-badge.svg]]
+[[https://github.com/DaniruKun/dilbert-el/actions][file:https://github.com/DaniruKun/dilbert-el/actions/workflows/ci.yml/badge.svg]]
 
 Read [[https://dilbert.com][Dilbert]] comics directly in Emacs.
 
