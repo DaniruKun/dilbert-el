@@ -29,5 +29,6 @@ jobs:
         version: ${{ matrix.emacs_version }}
     - uses: leotaku/elisp-check@master
       with:
+        check: melpa
         file: dilbert.el
         ignore_warnings: ${{ matrix.ignore_warnings }}
